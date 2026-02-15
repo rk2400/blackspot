@@ -54,10 +54,10 @@ export default function ContactPage() {
 
   async function copyEmail() {
     try {
-      await navigator.clipboard.writeText('littleflame.official@gmail.com');
+      await navigator.clipboard.writeText('support@blackspot.local');
       toast.success('Email copied to clipboard');
     } catch (e) {
-      toast('littleflame.official@gmail.com');
+      toast('support@blackspot.local');
     }
   }
 
@@ -79,7 +79,7 @@ export default function ContactPage() {
             <div>
               <h2 className="text-2xl font-serif text-stone-900 mb-6">We're Here to Help</h2>
               <p className="text-stone-600 leading-relaxed mb-8">
-                Have a question about our scents, shipping, or custom orders? 
+                Have a question about wellness tools, account access, or feature suggestions?
                 Our team is available Monday through Friday, 9am - 5pm IST.
               </p>
               
@@ -87,7 +87,7 @@ export default function ContactPage() {
                 <ContactItem 
                   icon={<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />}
                   label="Email"
-                  value="littleflame.official@gmail.com"
+                  value="support@blackspot.local"
                   action={
                     <button onClick={copyEmail} className="text-xs text-primary-600 font-medium uppercase tracking-wider hover:text-primary-700 ml-2">
                       Copy

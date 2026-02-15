@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
     // The payload should have type: 'admin' OR email matching admin email.
     // Ideally we should check against ADMIN_EMAIL env var, checking process.env.ADMIN_EMAIL works in Middleware.
     
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@littleflame.com';
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@blackspot.local';
     const isAdmin = 
       (payload.email && payload.email.toLowerCase() === adminEmail.toLowerCase()) || 
       payload.type === 'admin';

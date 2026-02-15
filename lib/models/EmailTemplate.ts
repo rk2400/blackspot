@@ -1,6 +1,13 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export type EmailTemplateType = 'ORDER_CREATED' | 'ORDER_PACKED' | 'ORDER_SHIPPED' | 'ORDER_DELIVERED' | 'ORDER_CANCELLED' | 'PAYMENT_CONFIRMED' | 'ORDER_CONFIRMED' | 'ORDER_TRACKING';
+export type EmailTemplateType =
+  | 'ACCOUNT_WELCOME'
+  | 'LOGIN_OTP'
+  | 'NEWSLETTER_UPDATE'
+  | 'GENERIC_NOTIFICATION'
+  | 'CONTACT_CONFIRMATION'
+  | 'CONTACT_NOTIFICATION'
+  | 'MANIFEST_UNLOCK';
 
 export interface IEmailTemplate extends Document {
   type: EmailTemplateType;
@@ -14,7 +21,7 @@ const EmailTemplateSchema: Schema = new Schema(
   {
     type: {
       type: String,
-      enum: ['ORDER_CREATED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'ORDER_DELIVERED', 'ORDER_CANCELLED', 'PAYMENT_CONFIRMED', 'ORDER_CONFIRMED', 'ORDER_TRACKING'],
+      enum: ['ACCOUNT_WELCOME', 'LOGIN_OTP', 'NEWSLETTER_UPDATE', 'GENERIC_NOTIFICATION', 'CONTACT_CONFIRMATION', 'CONTACT_NOTIFICATION', 'MANIFEST_UNLOCK'],
       required: true,
       unique: true,
     },
@@ -32,9 +39,19 @@ const EmailTemplateSchema: Schema = new Schema(
   }
 );
 
-const EmailTemplate: Model<IEmailTemplate> =
-  mongoose.models.EmailTemplate || mongoose.model<IEmailTemplate>('EmailTemplate', EmailTemplateSchema);
+let EmailTemplate: Model<IEmailTemplate>;
+const existing = mongoose.models.EmailTemplate as Model<IEmailTemplate> | undefined;
+if (existing) {
+  const typePath: any = existing.schema.path('type');
+  const enums: string[] | undefined = typePath?.options?.enum;
+  if (!enums || !enums.includes('MANIFEST_UNLOCK')) {
+    delete (mongoose.models as any).EmailTemplate;
+    EmailTemplate = mongoose.model<IEmailTemplate>('EmailTemplate', EmailTemplateSchema);
+  } else {
+    EmailTemplate = existing;
+  }
+} else {
+  EmailTemplate = mongoose.model<IEmailTemplate>('EmailTemplate', EmailTemplateSchema);
+}
 
 export default EmailTemplate;
-
-

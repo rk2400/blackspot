@@ -13,7 +13,7 @@ export default function TermsPage() {
           <div>
             <h2 className="text-xl font-medium text-stone-900 mb-2">Orders</h2>
             <p className="text-stone-700">
-              Orders are subject to availability. We reserve the right to cancel or refuse orders due to suspected fraud, pricing errors, or product issues.
+              Access to tools may be rolled out gradually. We reserve the right to refuse or revoke access due to abuse, suspected fraud, or misuse.
             </p>
           </div>
 
@@ -48,7 +48,7 @@ export default function TermsPage() {
           <div>
             <h2 className="text-xl font-medium text-stone-900 mb-2">Intellectual Property</h2>
             <p className="text-stone-700">
-              All content, logos, and designs on this website are owned by LittleFlame. Do not copy or distribute without permission.
+              All content, logos, and designs on this website are owned by The BlackSpot Project. Do not copy or distribute without permission.
             </p>
           </div>
 

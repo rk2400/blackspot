@@ -99,15 +99,23 @@ export default function LoginPage() {
       {/* Left Side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2000&auto=format&fit=crop" 
+          src="https://images.pexels.com/photos/8022728/pexels-photo-8022728.jpeg" 
           alt="Login Background" 
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-stone-900/40 backdrop-blur-[2px] flex flex-col justify-between p-12 text-white">
-          <Link href="/" className="text-2xl font-serif tracking-wide">LittleFlame</Link>
+        <div className="absolute inset-0 bg-black/60 flex flex-col justify-between p-12 text-white">
+          <Link href="/" className="text-2xl font-serif tracking-wide">The BlackSpot Project</Link>
           <div className="max-w-md">
+            <div className="text-center mb-6">
+              <img
+                src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png"
+                alt="BlackSpot icon"
+                className="mx-auto w-24 h-24 object-contain"
+              />
+              <div className="mt-2 text-sm text-white/80">Greetings from BlackSpot</div>
+            </div>
             <h2 className="text-4xl font-serif mb-4 text-white/80 ">Welcome Back</h2>
-            <p className="text-stone-200 text-lg">Sign in to access your order history, saved addresses, and exclusive member benefits.</p>
+            <p className="text-stone-200 text-lg">Sign in to access wellness tools, personalized content, and member benefits.</p>
           </div>
         </div>
       </div>
@@ -131,7 +139,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg focus:outline-none focus:border-primary-500 transition-colors"
+                  className="w-full px-4 py-3 bg-transparent border border-stone-200 rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-stone-900 placeholder:text-stone-500"
                   placeholder="name@example.com"
                   required
                 />
@@ -152,7 +160,7 @@ export default function LoginPage() {
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-center text-2xl tracking-[0.5em] font-serif"
+                  className="w-full px-4 py-3 bg-transparent border border-stone-200 rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-center text-2xl tracking-[0.5em] font-serif text-stone-900 placeholder:text-stone-500"
                   placeholder="000000"
                   maxLength={6}
                   required

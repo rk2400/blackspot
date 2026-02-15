@@ -38,7 +38,7 @@ function getEnvVarAsBoolean(key: string, defaultValue?: boolean): boolean {
 
 // Database Configuration
 export const dbConfig = {
-  uri: getEnvVar('MONGODB_URI', 'mongodb://localhost:27017/littleflame'),
+  uri: getEnvVar('MONGODB_URI', 'mongodb://localhost:27017/blackspot'),
 } as const;
 
 // Authentication Configuration
@@ -51,7 +51,7 @@ export const authConfig = {
 
 // Admin Configuration
 export const adminConfig = {
-  email: getEnvVar('ADMIN_EMAIL', 'admin@littleflame.com'),
+  email: getEnvVar('ADMIN_EMAIL', 'admin@blackspot.local'),
   password: getEnvVar('ADMIN_PASSWORD', 'ChangeThisPassword123!'),
 } as const;
 
@@ -61,7 +61,7 @@ export const emailConfig = {
   port: getEnvVarAsNumber('EMAIL_PORT', 587),
   user: getEnvVar('EMAIL_USER', ''),
   pass: getEnvVar('EMAIL_PASS', ''),
-  from: getEnvVar('EMAIL_FROM', 'noreply@littleflame.com'),
+  from: getEnvVar('EMAIL_FROM', 'noreply@blackspot.local'),
   secure: getEnvVarAsBoolean('EMAIL_SECURE', false),
   // Check if email is configured (all required fields present)
   isConfigured: (): boolean => {
@@ -75,7 +75,7 @@ export const emailConfig = {
 
 // App Configuration
 export const appConfig = {
-  name: getEnvVar('APP_NAME', 'LittleFlame'),
+  name: getEnvVar('APP_NAME', 'The BlackSpot Project'),
   url: getEnvVar('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
   nodeEnv: getEnvVar('NODE_ENV', 'development'),
   isProduction: (): boolean => {
@@ -92,7 +92,7 @@ export const paymentConfig = {
   testMode: getEnvVarAsBoolean('UPI_TEST_MODE', true),
   // UPI Configuration
   upiId: getEnvVar('NEXT_PUBLIC_UPI_ID', 'merchant@upi'),
-  upiPayeeName: getEnvVar('NEXT_PUBLIC_UPI_PAYEE_NAME', 'LittleFlame'),
+  upiPayeeName: getEnvVar('NEXT_PUBLIC_UPI_PAYEE_NAME', 'The BlackSpot Project'),
   // Future: Add Razorpay/Cashfree keys here
   razorpayKeyId: getEnvVar('RAZORPAY_KEY_ID', ''),
   razorpayKeySecret: getEnvVar('RAZORPAY_KEY_SECRET', ''),

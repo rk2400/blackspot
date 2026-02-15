@@ -7,46 +7,38 @@ import Link from 'next/link';
 export default function HelpPage() {
   const faqs = [
     {
-      question: 'How do I place an order?',
-      answer: 'Browse our products, add items to your cart, and proceed to checkout. You\'ll need to create an account or login to complete your purchase.',
+      question: 'How do I use the tools?',
+      answer: 'Create an account or log in, then explore meditation, journaling, and cosmic cycle tools as we roll them out.',
     },
     {
-      question: 'What payment methods do you accept?',
-      answer: 'We currently accept UPI payments. More payment options will be available soon.',
+      question: 'Is my data private?',
+      answer: 'Yes. Your personal information is protected and used only to provide the service as described in our Privacy Policy.',
     },
     {
-      question: 'How long does shipping take?',
-      answer: 'Standard shipping typically takes 5-7 business days. You\'ll receive tracking information once your order ships.',
+      question: 'Will there be new features?',
+      answer: 'We are actively building new spiritual and wellness tools. Updates will be announced periodically.',
     },
     {
-      question: 'Can I cancel or modify my order?',
-      answer: 'You can cancel your order within 24 hours of placing it. Contact our support team for assistance.',
+      question: 'How can I reset my account?',
+      answer: 'Reach out via the Contact page and we will help with account issues.',
     },
     {
-      question: 'What is your return policy?',
-      answer: 'We offer a 7-day return policy for unopened products in original packaging. Contact us to initiate a return.',
-    },
-    {
-      question: 'How do I track my order?',
-      answer: 'Once your order ships, you\'ll receive an email with tracking information. You can also view order status in your account.',
+      question: 'Can I suggest a feature?',
+      answer: 'Yes. Use the Contact page to share ideas or feedback.',
     },
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-stone-900 text-white">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-center gap-8 mb-8">
           <div className="flex-1">
             <h1 className="text-4xl font-bold">Help & Support</h1>
-            <p className="text-gray-600 mt-2">Quick answers and support resources to help you shop with confidence.</p>
+            <p className="text-stone-300 mt-2">Quick answers and support resources for your wellness journey.</p>
           </div>
-          <img
-            src="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a7d3c1d5b6d5f7f8a3e3b0b3c0f8a5f"
-            alt="support"
-            className="w-40 h-32 object-cover rounded-md"
-          />
+
         </div>
 
         <div className="card mb-8">
@@ -55,14 +47,14 @@ export default function HelpPage() {
             {faqs.map((faq, index) => (
               <div key={index} className="border rounded-md overflow-hidden">
                 <button
-                  className="w-full text-left px-4 py-3 flex justify-between items-center"
+                  className="w-full text-left px-4 py-3 flex justify-between items-center text-stone-200"
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 >
                   <span className="font-medium">{faq.question}</span>
-                  <span className="text-gray-500">{openIndex === index ? '−' : '+'}</span>
+                  <span className="text-stone-400">{openIndex === index ? '−' : '+'}</span>
                 </button>
                 {openIndex === index && (
-                  <div className="px-4 pb-4 text-gray-700">{faq.answer}</div>
+                  <div className="px-4 pb-4 text-stone-300">{faq.answer}</div>
                 )}
               </div>
             ))}
@@ -71,7 +63,7 @@ export default function HelpPage() {
 
         <div className="card">
           <h2 className="text-2xl font-semibold mb-4">Still Need Help?</h2>
-          <p className="text-gray-700 mb-4">Can't find what you're looking for? Our support team is here to help.</p>
+          <p className="text-stone-300 mb-4">Can't find what you're looking for? Our support team is here to help.</p>
           <Link href="/contact" className="btn btn-primary">Contact Support</Link>
         </div>
       </main>

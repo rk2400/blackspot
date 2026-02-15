@@ -1,5 +1,5 @@
 {
-  "name": "littleflame",
+  "name": "the-blackspot-project",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,19 +13,21 @@
     "fix-emails": "ts-node scripts/fix-user-emails.ts"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.16",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
+    "mongodb": "^6.6.0",
     "next": "^14.0.4",
     "nodemailer": "^6.9.7",
+    "pdf-lib": "^1.17.1",
+    "postcss": "^8.4.32",
     "razorpay": "^2.9.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "zod": "^3.22.4",
-    "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
-    "autoprefixer": "^10.4.16"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

@@ -6,6 +6,7 @@ export interface IUser extends Document {
   phone: string;
   verified: boolean;
   locked?: boolean;
+  manifestMaxVideos?: number;
   address?: {
     full?: string;
     street?: string;
@@ -71,19 +72,17 @@ const UserSchema: Schema = new Schema(
       default: false,
       index: true,
     },
+    manifestMaxVideos: {
+      type: Number,
+      default: 3,
+      min: 1,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Virtual populate for user's orders
-UserSchema.virtual('orders', {
-  ref: 'Order',
-  localField: '_id',
-  foreignField: 'userId',
-  justOne: false,
-});
 
 // Ensure virtuals are included when converting to JSON/Object
 UserSchema.set('toObject', { virtuals: true });

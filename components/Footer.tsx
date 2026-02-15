@@ -10,10 +10,10 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="space-y-6">
             <Link href="/" className="inline-block">
-              <span className="text-2xl font-serif text-white tracking-wide">LittleFlame</span>
+              <span className="text-2xl font-serif text-white tracking-wide">The BlackSpot Project</span>
             </Link>
             <p className="text-stone-400 leading-relaxed max-w-xs">
-              Hand-poured candles crafted with sustainable soy wax and premium essential oils. Illuminating your space with intention.
+              Cosmos-inspired tools for mental wellness and spirituality.
             </p>
             <div className="flex gap-4">
               <SocialLink href="#" label="Instagram" icon={
@@ -28,14 +28,13 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Shop Links */}
+          {/* Explore Links */}
           <div>
-            <h4 className="text-white font-serif text-lg mb-6">Discover</h4>
+            <h4 className="text-white font-serif text-lg mb-6">Explore</h4>
             <ul className="space-y-4">
-              <FooterLink href="/products">All Collections</FooterLink>
-              <FooterLink href="/products?category=seasonal">Seasonal Scents</FooterLink>
-              <FooterLink href="/products?category=signature">Signature Series</FooterLink>
-              <FooterLink href="/products?category=gift-sets">Gift Sets</FooterLink>
+              <FooterLink href="/about">About</FooterLink>
+              <FooterLink href="/help">Help</FooterLink>
+              <FooterLink href="/contact">Contact</FooterLink>
             </ul>
           </div>
 
@@ -43,18 +42,16 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-serif text-lg mb-6">Company</h4>
             <ul className="space-y-4">
-              <FooterLink href="/about">Our Story</FooterLink>
-              <FooterLink href="/sustainability">Sustainability</FooterLink>
-              <FooterLink href="/contact">Contact Us</FooterLink>
-              <FooterLink href="/shipping">Shipping & Returns</FooterLink>
+              <FooterLink href="/privacy">Privacy</FooterLink>
+              <FooterLink href="/terms">Terms</FooterLink>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-white font-serif text-lg mb-6">The Inner Circle</h4>
+            <h4 className="text-white font-serif text-lg mb-6">Join Our Circle</h4>
             <p className="text-stone-400 mb-4 text-sm">
-              Join for exclusive access to limited drops, scent profiles, and wellness tips.
+              Receive updates on new wellness tools and spiritual practices.
             </p>
             <form className="flex flex-col gap-3">
               <input 
@@ -74,7 +71,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-500">
-          <p>&copy; {new Date().getFullYear()} LittleFlame. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} The BlackSpot Project. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-stone-300 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-stone-300 transition-colors">Terms of Service</Link>

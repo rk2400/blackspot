@@ -74,7 +74,17 @@ export async function POST(req: NextRequest) {
 
     // Send OTP email (use original email for display, normalized for storage)
     console.log('[auth/login] Sending OTP email to', normalizedEmail);
-    const sent = await emailService.sendOTP(normalizedEmail, code);
+    const { appConfig, adminConfig } = await import('@/lib/config');
+    const displayName =
+      (user?.name && user.name.trim()) ||
+      (normalizedEmail === adminConfig.email.toLowerCase() ? 'Admin' : normalizedEmail.split('@')[0]) ||
+      'User';
+    const sent = await emailService.sendUsingTemplate('LOGIN_OTP', normalizedEmail, {
+      code,
+      appName: appConfig.name,
+      expiry: authConfig.otpExpiryMinutes,
+      userName: displayName,
+    });
     if (!sent) {
       return NextResponse.json(
         { error: 'Failed to send OTP email. Please try again later.' },

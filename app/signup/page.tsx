@@ -69,15 +69,23 @@ export default function SignupPage() {
       {/* Left Side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2000&auto=format&fit=crop" 
+          src="https://images.pexels.com/photos/3934512/pexels-photo-3934512.jpeg" 
           alt="Signup Background" 
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-stone-900/40 backdrop-blur-[2px] flex flex-col justify-between p-12 text-white">
-          <Link href="/" className="text-2xl font-serif tracking-wide">LittleFlame</Link>
+        <div className="absolute inset-0 bg-black/60 flex flex-col justify-between p-12 text-white">
+          <Link href="/" className="text-2xl font-serif tracking-wide">The BlackSpot Project</Link>
           <div className="max-w-md">
+            <div className="text-center mb-6">
+              <img
+                src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png"
+                alt="BlackSpot icon"
+                className="mx-auto w-24 h-24 object-contain"
+              />
+              <div className="mt-2 text-sm text-white/80">Greetings from BlackSpot</div>
+            </div>
             <h2 className="text-4xl font-serif mb-4 text-white/80 ">Join Our Community</h2>
-            <p className="text-stone-200 text-lg">Create an account to track orders, save favorites, and receive early access to new collections.</p>
+            <p className="text-stone-200 text-lg">Create an account to access wellness tools, personalize your journey, and receive updates.</p>
           </div>
         </div>
       </div>
@@ -100,7 +108,7 @@ export default function SignupPage() {
                   setFormData({ ...formData, name: e.target.value });
                   if (errors.name) setErrors({ ...errors, name: '' });
                 }}
-                className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-primary-500 transition-colors ${errors.name ? 'border-red-500' : 'border-stone-200'}`}
+                className={`w-full px-4 py-3 bg-transparent border rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-stone-900 placeholder:text-stone-500 ${errors.name ? 'border-red-500' : 'border-stone-200'}`}
                 placeholder="Jane Doe"
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
@@ -115,7 +123,7 @@ export default function SignupPage() {
                   setFormData({ ...formData, email: e.target.value });
                   if (errors.email) setErrors({ ...errors, email: '' });
                 }}
-                className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-primary-500 transition-colors ${errors.email ? 'border-red-500' : 'border-stone-200'}`}
+                className={`w-full px-4 py-3 bg-transparent border rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-stone-900 placeholder:text-stone-500 ${errors.email ? 'border-red-500' : 'border-stone-200'}`}
                 placeholder="name@example.com"
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
@@ -130,7 +138,7 @@ export default function SignupPage() {
                   setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) });
                   if (errors.phone) setErrors({ ...errors, phone: '' });
                 }}
-                className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-primary-500 transition-colors ${errors.phone ? 'border-red-500' : 'border-stone-200'}`}
+                className={`w-full px-4 py-3 bg-transparent border rounded-lg focus:outline-none focus:border-primary-500 transition-colors text-stone-900 placeholder:text-stone-500 ${errors.phone ? 'border-red-500' : 'border-stone-200'}`}
                 placeholder="9876543210"
               />
               {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}

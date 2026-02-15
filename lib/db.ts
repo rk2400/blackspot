@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { dbConfig } from './config';
+import { initOnce as initManifestUnlockScheduler } from './manifestUnlockScheduler';
 
 const MONGODB_URI = dbConfig.uri;
 
@@ -40,8 +41,11 @@ async function connectDB() {
     throw e;
   }
 
+  try {
+    await initManifestUnlockScheduler();
+  } catch {}
+
   return cached.conn;
 }
 
 export default connectDB;
-

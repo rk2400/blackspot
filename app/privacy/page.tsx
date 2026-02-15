@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
           <div>
             <h2 className="text-xl font-medium text-stone-900 mb-2">Information We Collect</h2>
             <p className="text-stone-700">
-              We collect your name, email, phone, shipping address, and order details when you create an account or place an order.
+              We collect your name, email, and phone when you create an account or contact us. We do not collect shipping or order information.
               We also collect basic technical information such as browser type and device identifiers to improve site performance.
             </p>
           </div>
@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
           <div>
             <h2 className="text-xl font-medium text-stone-900 mb-2">How We Use Information</h2>
             <p className="text-stone-700">
-              We use your information to process orders, communicate updates, provide customer support, and improve our services.
+              We use your information to provide access to wellness tools, communicate updates, offer support, and improve our services.
               We may send you promotional emails; you can opt out at any time using the unsubscribe link.
             </p>
           </div>
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
           <div>
             <h2 className="text-xl font-medium text-stone-900 mb-2">Data Sharing</h2>
             <p className="text-stone-700">
-              We do not sell your personal data. We share data only with trusted partners necessary to fulfill your order, such as shipping and payment providers.
+              We do not sell your personal data. We may share data with trusted partners only to deliver the service (e.g., email infrastructure).
             </p>
           </div>
 

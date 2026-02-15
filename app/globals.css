@@ -9,11 +9,11 @@
   }
 
   body {
-    @apply bg-stone-50 text-stone-800 antialiased font-sans selection:bg-primary-200 selection:text-primary-900;
+    @apply bg-stone-900 text-stone-200 antialiased font-sans selection:bg-stone-700 selection:text-white;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight text-stone-900;
+    @apply font-serif tracking-tight text-white;
   }
 }
 
@@ -23,23 +23,23 @@
   }
   
   .btn-primary {
-    @apply bg-stone-900 text-white hover:bg-stone-800 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-stone-800 text-white hover:bg-stone-700 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
   .btn-secondary {
-    @apply bg-white border border-stone-200 text-stone-800 hover:bg-stone-50 hover:border-stone-300 active:scale-95;
+    @apply bg-stone-900 border border-stone-700 text-stone-200 hover:bg-stone-800 hover:border-stone-600 active:scale-95;
   }
 
   .btn-accent {
-    @apply bg-primary-500 text-white hover:bg-primary-600 shadow-md hover:shadow-primary-200/50 active:scale-95;
+    @apply bg-primary-500 text-white hover:bg-primary-600 shadow-md hover:shadow-stone-800 active:scale-95;
   }
   
   .input {
-    @apply w-full px-4 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400 transition-all duration-200 placeholder:text-stone-400;
+    @apply w-full px-4 py-3 border border-stone-700 rounded-lg bg-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-700 focus:border-stone-700 transition-all duration-200 placeholder:text-stone-400 text-stone-200;
   }
   
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow duration-300 overflow-hidden;
+    @apply bg-stone-900 rounded-xl shadow-sm border border-stone-800 hover:shadow-md transition-shadow duration-300 overflow-hidden;
   }
 
   .container-custom {
@@ -75,6 +75,6 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-stone-300 rounded-full hover:bg-stone-400 transition-colors;
+  @apply bg-stone-700 rounded-full hover:bg-stone-600 transition-colors;
 }
 
