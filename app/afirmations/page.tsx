@@ -76,27 +76,7 @@ function ListItem({ text, tone }: { text: string; tone: 'morning' | 'night' }) {
     }
   }
  
-  async function addItem() {
-    const text = newText.trim();
-    if (!text) return;
-    try {
-      const res = await fetch('/api/afirmations/add', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, mode }),
-      });
-      if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
-        throw new Error(d?.error || 'Failed to add');
-      }
-      const d = await res.json();
-      setItems((prev) => [...prev, { id: d.id, text: d.text }]);
-      setNewText('');
-    } catch (err) {
-      console.error('add affirm', err);
-    }
-  }
+ 
  
   async function deleteItem(id: string) {
     const prev = [...items];

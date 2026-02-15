@@ -10,7 +10,7 @@ async function getHandler(req: AuthRequest, { params }: { params: { id: string }
   await connectDB();
   const db = mongoose.connection.db;
   if (!db) {
-    return new Response('Database not connected', { status: 500 });
+    return NextResponse.json({ error: 'Database not connected' }, { status: 500 });
   }
   const { GridFSBucket, ObjectId } = await import('mongodb');
   const bucket = new GridFSBucket(db, { bucketName: 'manifest_videos' });
@@ -18,19 +18,19 @@ async function getHandler(req: AuthRequest, { params }: { params: { id: string }
 
   const files = await bucket.find({ _id: id }).toArray();
   if (!files.length) {
-    return new Response('Not found', { status: 404 });
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
   const file = files[0] as any;
   const owner = req.user?.userId || req.user?.email;
   const { adminConfig } = await import('@/lib/config');
   const isAdmin = (req.user?.email || '').toLowerCase() === adminConfig.email.toLowerCase() || req.user?.type === 'admin';
   if (!isAdmin && file.metadata?.uploadedBy !== owner) {
-    return new Response('Forbidden', { status: 403 });
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
   if (file.metadata?.unlockAt) {
     const unlockDate = new Date(file.metadata.unlockAt);
     if (!isNaN(unlockDate.getTime()) && Date.now() < unlockDate.getTime()) {
-      return new Response('Locked until ' + unlockDate.toISOString(), { status: 403 });
+      return NextResponse.json({ error: 'Locked until ' + unlockDate.toISOString() }, { status: 403 });
     }
   }
 
@@ -43,13 +43,10 @@ async function getHandler(req: AuthRequest, { params }: { params: { id: string }
   });
 
   const blob = Buffer.concat(chunks);
-  return new Response(blob, {
-    status: 200,
-    headers: {
-      'Content-Type': 'video/webm',
-      'Cache-Control': 'no-store, private, max-age=0',
-    },
-  });
+  const res = new NextResponse(blob, { status: 200 });
+  res.headers.set('Content-Type', 'video/webm');
+  res.headers.set('Cache-Control', 'no-store, private, max-age=0');
+  return res;
 }
  
  async function deleteHandler(req: AuthRequest, { params }: { params: { id: string } }) {
@@ -80,9 +77,7 @@ async function getHandler(req: AuthRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
    }
  
-   await new Promise<void>((resolve, reject) => {
-     bucket.delete(id, (err?: any) => (err ? reject(err) : resolve()));
-   });
+  await bucket.delete(id);
  
   return NextResponse.json({ success: true });
  }

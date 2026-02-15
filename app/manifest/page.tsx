@@ -270,9 +270,9 @@ export default function Manifest() {
   }
 
   async function deleteVideo(id: string) {
+    const previousVideos = [...videos];
     try {
       setDeletingIds((prev) => new Set([...prev, id]));
-      const previous = [...videos];
       setVideos((prev) => prev.filter((v) => v.id !== id));
       const res = await fetch(`/api/manifest/file/${id}`, { method: 'DELETE', credentials: 'same-origin', cache: 'no-store' });
       if (!res.ok) {
@@ -288,7 +288,7 @@ export default function Manifest() {
       await loadVideos(); // resync to server state
     } catch (err: any) {
       // Revert optimistic removal
-      setVideos(previous);
+      setVideos(previousVideos);
       setDeletingIds((prev) => {
         const next = new Set(prev);
         next.delete(id);

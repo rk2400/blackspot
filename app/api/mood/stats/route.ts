@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
  import connectDB from '@/lib/db';
  import { withAuth, AuthRequest } from '@/lib/middleware';
  import Mood from '@/lib/models/Mood';
+import type { PipelineStage } from 'mongoose';
  
  export const runtime = 'nodejs';
  export const dynamic = 'force-dynamic';
@@ -30,10 +31,10 @@ import { NextResponse } from 'next/server';
       const e = new Date(endParam);
       if (!isNaN(e.getTime())) until = e;
     }
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       { $match: { owner: (owner || '').toLowerCase(), createdAt: { $gte: since, $lte: until } } },
       { $addFields: { day: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } } } },
-      { $sort: { createdAt: -1 } },
+      { $sort: { createdAt: -1 as 1 | -1 } },
       { $group: { _id: '$day', latest: { $first: '$$ROOT' } } },
       { $replaceRoot: { newRoot: '$latest' } },
     ];
