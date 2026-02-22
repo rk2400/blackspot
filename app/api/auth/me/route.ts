@@ -57,6 +57,8 @@ async function handler(req: AuthRequest) {
         name: user.name || '',
         email: user.email,
         phone: user.phone || '',
+        bio: (user as any).bio || '',
+        lastSeen: (user as any).lastSeen || null,
         interests: Array.isArray((user as any).interests) ? (user as any).interests : [],
         address: user.address
           ? {

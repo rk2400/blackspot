@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUser } from '@/lib/contexts/UserContext';
 import toast from 'react-hot-toast';
-import { getCommunityPosts, createCommunityPost, deleteCommunityPost, uploadCommunityImage } from '@/lib/api-client';
+import { getCommunityPosts, createCommunityPost, deleteCommunityPost, uploadCommunityImage, updatePresence, getPresence } from '@/lib/api-client';
 
 export default function TopicPage({ params }: { params: { slug: string } }) {
   const { user } = useUser();
@@ -15,23 +15,49 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageAlt, setImageAlt] = useState('');
+  const [imageCaption, setImageCaption] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const load = async () => {
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [presence, setPresence] = useState<Array<{ userId: string; label: string; typing: boolean; updatedAt: string; lastSeen?: string | null }>>([]);
+  const load = async (p = 1) => {
     try {
-      const data = await getCommunityPosts(params.slug);
+      const data = await getCommunityPosts(params.slug, p, 10);
       setTopic(data.topic);
-      setPosts(data.posts || []);
+      if (p === 1) {
+        setPosts(data.posts || []);
+      } else {
+        setPosts((prev) => [...prev, ...(data.posts || [])]);
+      }
+      setHasMore(Boolean(data.hasMore));
     } catch (e: any) {
       toast.error(e.message || 'Failed to load posts');
     } finally {
-      setLoading(false);
+      if (p === 1) setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   useEffect(() => {
-    load();
+    load(1);
+    let active = true;
+    const tick = async () => {
+      try {
+        await updatePresence(params.slug, false);
+        const items = await getPresence(params.slug);
+        if (active) setPresence(items);
+      } catch {}
+    };
+    tick();
+    const iv = setInterval(tick, 10000);
+    return () => {
+      active = false;
+      clearInterval(iv);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.slug]);
 
@@ -57,18 +83,32 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
 
         {user && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 mb-8">
+            <div className="mb-4 text-stone-300 text-sm">
+              {presence.length > 0 ? (
+                <>
+                  <span>{presence.length} active</span>
+                  {presence.some((p) => p.typing) ? <span className="ml-2">• typing…</span> : null}
+                </>
+              ) : (
+                <span>Be the first to write</span>
+              )}
+            </div>
             <h2 className="text-xl font-semibold mb-4">Start a Discussion</h2>
             <input
               className="input mb-3"
               placeholder="Post title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onFocus={() => updatePresence(params.slug, true)}
+              onBlur={() => updatePresence(params.slug, false)}
             />
             <textarea
               className="input h-28"
               placeholder="Write your thoughts..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
+              onFocus={() => updatePresence(params.slug, true)}
+              onBlur={() => updatePresence(params.slug, false)}
             />
             <div className="mt-3">
               <input
@@ -94,23 +134,43 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               />
               {imageUrl ? (
                 <div className="mt-3">
-                  <img src={imageUrl} alt="Post image" className="max-h-40 rounded-lg border border-white/10" />
+                  <img src={imageUrl} alt={imageAlt || 'Post image'} className="max-h-40 rounded-lg border border-white/10" />
+                  {imageCaption ? <div className="text-stone-400 text-xs mt-1">{imageCaption}</div> : null}
                 </div>
               ) : null}
               {uploading ? <div className="text-stone-300 mt-2">Uploading...</div> : null}
               {uploadError ? <div className="text-red-400 mt-2">{uploadError}</div> : null}
             </div>
+            <input
+              className="input mt-3"
+              placeholder="Image alt text (optional)"
+              value={imageAlt}
+              onChange={(e) => setImageAlt(e.target.value)}
+            />
+            <input
+              className="input mt-2"
+              placeholder="Image caption (optional)"
+              value={imageCaption}
+              onChange={(e) => setImageCaption(e.target.value)}
+            />
             <div className="mt-4">
               <button
                 className="btn btn-primary"
-                disabled={creating || !title.trim() || !content.trim()}
+                disabled={
+                  creating ||
+                  !title.trim() ||
+                  !content.trim() ||
+                  (!!imageUrl.trim() && !imageAlt.trim())
+                }
                 onClick={async () => {
                   try {
                     setCreating(true);
-                    await createCommunityPost(params.slug, title.trim(), content.trim(), imageUrl || undefined);
+                    await createCommunityPost(params.slug, title.trim(), content.trim(), imageUrl || undefined, imageAlt || undefined, imageCaption || undefined);
                     setTitle('');
                     setContent('');
                     setImageUrl('');
+                    setImageAlt('');
+                    setImageCaption('');
                     toast.success('Post created');
                     await load();
                   } catch (e: any) {
@@ -122,6 +182,9 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               >
                 {creating ? 'Posting...' : 'Post'}
               </button>
+              {!!imageUrl.trim() && !imageAlt.trim() ? (
+                <div className="text-red-400 text-sm mt-2">Alt text is required when an image is attached.</div>
+              ) : null}
             </div>
           </div>
         )}
@@ -176,6 +239,21 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
               );
             })
           )}
+          {hasMore ? (
+            <div className="flex justify-center mt-6">
+              <button
+                className="btn btn-secondary"
+                onClick={async () => {
+                  const next = page + 1;
+                  setPage(next);
+                  setLoadingMore(true);
+                  await load(next);
+                }}
+              >
+                {loadingMore ? 'Loading...' : 'Load more'}
+              </button>
+            </div>
+          ) : null}
         </div>
       </main>
     </div>

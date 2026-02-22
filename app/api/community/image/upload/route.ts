@@ -6,6 +6,9 @@ import { withAuth, AuthRequest } from '@/lib/middleware';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_BYTES = 5 * 1024 * 1024;
+
 async function handler(req: AuthRequest) {
   try {
     await connectDB();
@@ -15,6 +18,12 @@ async function handler(req: AuthRequest) {
     const form = await req.formData();
     const file = form.get('file') as File | null;
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json({ error: 'Unsupported file type. Use JPEG/PNG/WebP' }, { status: 400 });
+    }
+    if ((file as any).size && (file as any).size > MAX_BYTES) {
+      return NextResponse.json({ error: 'File too large. Max 5MB' }, { status: 400 });
+    }
 
     const db = mongoose.connection.db;
     if (!db) return NextResponse.json({ error: 'Database not connected' }, { status: 500 });
@@ -29,7 +38,7 @@ async function handler(req: AuthRequest) {
 
     const uploadStream = bucket.openUploadStream(filename, {
       contentType,
-      metadata: { uploadedBy: owner, contentType },
+      metadata: { uploadedBy: owner, contentType, uploadedAt: new Date() },
     });
 
     await new Promise<void>((resolve, reject) => {

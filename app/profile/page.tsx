@@ -6,7 +6,7 @@ import Link from 'next/link';
 // Header and Footer are provided by `app/layout.tsx`
 import { useUser } from '@/lib/contexts/UserContext';
 import toast from 'react-hot-toast';
-import { updateUserInterests } from '@/lib/api-client';
+import { updateUserInterests, updateUserBio, getMyActivity } from '@/lib/api-client';
 
 export default function ProfilePage() {
   const { user, loading: userLoading } = useUser();
@@ -28,6 +28,10 @@ export default function ProfilePage() {
     'Community',
   ], []);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [bio, setBio] = useState<string>('');
+  const [savingBio, setSavingBio] = useState(false);
+  const [activity, setActivity] = useState<Array<{ title: string; createdAt: string; topic?: { title: string; slug: string } }>>([]);
+  const [activityLoading, setActivityLoading] = useState(true);
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -46,6 +50,18 @@ export default function ProfilePage() {
     } else {
       setSelectedInterests([]);
     }
+    setBio((user as any)?.bio || '');
+    (async () => {
+      try {
+        setActivityLoading(true);
+        const posts = await getMyActivity();
+        setActivity(posts);
+      } catch {
+        setActivity([]);
+      } finally {
+        setActivityLoading(false);
+      }
+    })();
   }, [user, ALLOWED]);
 
   if (userLoading) {
@@ -83,6 +99,55 @@ export default function ProfilePage() {
                   <p className="font-medium text-stone-200 text-lg">{user.phone || 'N/A'}</p>
                 </div>
               </div>
+            </div>
+            <div className="bg-stone-900 rounded-xl shadow-sm border border-stone-800 p-6 mt-6">
+              <div className="mb-6 border-b border-stone-800 pb-4">
+                <h2 className="text-xl font-serif text-white">Bio</h2>
+              </div>
+              <textarea
+                className="input h-28"
+                placeholder="Tell others about yourself..."
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+              />
+              <div className="mt-3">
+                <button
+                  className="btn btn-primary"
+                  disabled={savingBio}
+                  onClick={async () => {
+                    try {
+                      setSavingBio(true);
+                      await updateUserBio(bio.trim());
+                      toast.success('Bio updated');
+                    } catch (e: any) {
+                      toast.error(e.message || 'Failed to update bio');
+                    } finally {
+                      setSavingBio(false);
+                    }
+                  }}
+                >
+                  {savingBio ? 'Saving...' : 'Save Bio'}
+                </button>
+              </div>
+            </div>
+            <div className="bg-stone-900 rounded-xl shadow-sm border border-stone-800 p-6 mt-6">
+              <div className="mb-6 border-b border-stone-800 pb-4">
+                <h2 className="text-xl font-serif text-white">Recent Activity</h2>
+              </div>
+              {activityLoading ? (
+                <div className="text-stone-300">Loading activity...</div>
+              ) : activity.length === 0 ? (
+                <div className="text-stone-300">No recent posts.</div>
+              ) : (
+                <div className="space-y-3">
+                  {activity.map((p, idx) => (
+                    <Link key={idx} href={p.topic?.slug ? `/community/${p.topic.slug}` : '/community'} className="block rounded-lg border border-stone-800 bg-stone-900 hover:bg-stone-800 transition p-3">
+                      <div className="text-stone-200">{p.title}</div>
+                      <div className="text-stone-400 text-xs mt-1">{new Date(p.createdAt).toLocaleString()} • {p.topic?.title || 'Community'}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

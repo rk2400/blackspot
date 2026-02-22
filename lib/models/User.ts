@@ -8,6 +8,8 @@ export interface IUser extends Document {
   locked?: boolean;
   manifestMaxVideos?: number;
   interests?: string[];
+  bio?: string;
+  lastSeen?: Date;
   address?: {
     full?: string;
     street?: string;
@@ -82,6 +84,16 @@ const UserSchema: Schema = new Schema(
       type: [String],
       default: [],
     },
+    bio: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    lastSeen: {
+      type: Date,
+      default: () => new Date(),
+      index: true,
+    },
   },
   {
     timestamps: true,
@@ -97,6 +109,9 @@ UserSchema.set('toJSON', { virtuals: true });
 // Note: This is explicit so duplicate-key errors are only for email.
 UserSchema.index({ email: 1 }, { unique: true });
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+if (mongoose.models.User) {
+  mongoose.deleteModel('User');
+}
+const User: Model<IUser> = mongoose.model<IUser>('User', UserSchema);
 
 export default User;

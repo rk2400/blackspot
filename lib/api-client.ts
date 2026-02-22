@@ -78,19 +78,23 @@ export async function createCommunityTopic(title: string, description: string, i
   return data.topic as { title: string; slug: string };
 }
 
-export async function getCommunityPosts(slug: string) {
-  const res = await fetch(`${API_URL}/api/community/topics/${slug}/posts`, { cache: 'no-store', credentials: 'include' });
+export async function getCommunityPosts(slug: string, page?: number, limit?: number) {
+  const qs = new URLSearchParams();
+  if (page) qs.set('page', String(page));
+  if (limit) qs.set('limit', String(limit));
+  const url = `${API_URL}/api/community/topics/${slug}/posts${qs.toString() ? `?${qs.toString()}` : ''}`;
+  const res = await fetch(url, { cache: 'no-store', credentials: 'include' });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to fetch posts');
-  return data as { topic: { title: string; slug: string; imageUrl?: string }; posts: Array<{ _id: string; title: string; content: string; imageUrl?: string; author: { _id: string; name?: string; email?: string }; likes: any[]; createdAt: string }> };
+  return data as { topic: { title: string; slug: string; imageUrl?: string }; posts: Array<{ _id: string; title: string; content: string; imageUrl?: string; imageAlt?: string; imageCaption?: string; author: { _id: string; name?: string; email?: string }; likes: any[]; createdAt: string }>; page?: number; total?: number; hasMore?: boolean };
 }
 
-export async function createCommunityPost(slug: string, title: string, content: string, imageUrl?: string) {
+export async function createCommunityPost(slug: string, title: string, content: string, imageUrl?: string, imageAlt?: string, imageCaption?: string) {
   const res = await fetch(`${API_URL}/api/community/topics/${slug}/posts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ title, content, imageUrl }),
+    body: JSON.stringify({ title, content, imageUrl, imageAlt, imageCaption }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to create post');
@@ -176,6 +180,42 @@ export async function deleteCommunityComment(postId: string, commentId: string) 
   return data as { ok: true };
 }
 
+export async function getCommunityFeeds() {
+  const res = await fetch(`${API_URL}/api/community/feeds`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to load feeds');
+  return data as { trending: Array<any>; mostDiscussed: Array<any> };
+}
+
+export async function updateUserBio(bio: string) {
+  const res = await fetch(`${API_URL}/api/profile/bio`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ bio }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update bio');
+  return data.bio as string;
+}
+
+export async function updatePresence(slug: string, typing?: boolean) {
+  const res = await fetch(`${API_URL}/api/community/presence`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ slug, typing: !!typing }),
+  });
+  return res.json();
+}
+
+export async function getPresence(slug: string) {
+  const res = await fetch(`${API_URL}/api/community/presence/${slug}`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch presence');
+  return data.items as Array<{ userId: string; label: string; typing: boolean; updatedAt: string; lastSeen?: string | null }>;
+}
+
 export type AddressPayload = {
   street?: string;
   city?: string;
@@ -194,6 +234,16 @@ export async function saveAddress(address: AddressPayload) {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to save address');
   return data;
+}
+
+export async function getMyActivity() {
+  const res = await fetch(`${API_URL}/api/community/user/activity`, {
+    credentials: 'include',
+    cache: 'no-store',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch activity');
+  return data.posts as Array<{ title: string; createdAt: string; topic?: { title: string; slug: string } }>;
 }
 
 export async function createAccount(name: string, email: string, phone: string) {
@@ -256,6 +306,24 @@ export async function getAdminUsers() {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to fetch users');
   return data.users;
+}
+
+export async function getAdminStats() {
+  const res = await fetch(`${API_URL}/api/admin/stats`, {
+    credentials: 'include',
+    cache: 'no-store',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch stats');
+  return data as {
+    topicCount: number;
+    postCount: number;
+    commentCount: number;
+    userCount: number;
+    activeUsers7d: number;
+    totalLikes: number;
+    cadence7d: Array<{ date: string; count: number }>;
+  };
 }
 
 export async function updateAdminUserLock(id: string, locked: boolean) {

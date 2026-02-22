@@ -6,6 +6,8 @@ export interface ICommunityPost extends Document {
   title: string;
   content: string;
   imageUrl?: string;
+  imageAlt?: string;
+  imageCaption?: string;
   likes: mongoose.Types.ObjectId[];
   locked: boolean;
   createdAt: Date;
@@ -19,6 +21,8 @@ const CommunityPostSchema: Schema = new Schema(
     title: { type: String, required: true, trim: true },
     content: { type: String, required: true, trim: true },
     imageUrl: { type: String, default: '', trim: true },
+    imageAlt: { type: String, default: '', trim: true },
+    imageCaption: { type: String, default: '', trim: true },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     locked: { type: Boolean, default: false },
   },

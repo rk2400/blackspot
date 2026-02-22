@@ -57,7 +57,7 @@ export default function ContactPage() {
       await navigator.clipboard.writeText('support@blackspot.local');
       toast.success('Email copied to clipboard');
     } catch (e) {
-      toast('support@blackspot.local');
+      toast('theblackspotproject@gmail.com');
     }
   }
 

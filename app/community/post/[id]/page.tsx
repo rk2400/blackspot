@@ -20,6 +20,145 @@ export default function PostPage({ params }: { params: { id: string } }) {
   const [liking, setLiking] = useState(false);
   const canDeletePost = user && post?.author?._id && String(post.author._id) === String(user.id);
 
+  function MarkdownContent({ content }: { content: string }) {
+    const [blocks, setBlocks] = useState<Array<any>>([]);
+    useEffect(() => {
+      const lines = (content || '').split(/\r?\n/);
+      const out: Array<any> = [];
+      let inCode = false;
+      let codeBuf: string[] = [];
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.trim().startsWith('```')) {
+          if (!inCode) {
+            inCode = true;
+            codeBuf = [];
+          } else {
+            inCode = false;
+            out.push({ type: 'code', text: codeBuf.join('\n') });
+            codeBuf = [];
+          }
+          continue;
+        }
+        if (inCode) {
+          codeBuf.push(line);
+          continue;
+        }
+        if (/^\s*#{1,6}\s+/.test(line)) {
+          const level = (line.match(/^\s*(#+)\s+/) || ['','#'])[1].length;
+          const text = line.replace(/^\s*#{1,6}\s+/, '');
+          out.push({ type: 'heading', level, text });
+          continue;
+        }
+        if (/^\s*[-*]\s+/.test(line)) {
+          const text = line.replace(/^\s*[-*]\s+/, '');
+          out.push({ type: 'list-item', text });
+          continue;
+        }
+        if (/^\s*\d+\.\s+/.test(line)) {
+          const text = line.replace(/^\s*\d+\.\s+/, '');
+          out.push({ type: 'list-item', text });
+          continue;
+        }
+        if (line.trim().length === 0) {
+          out.push({ type: 'break' });
+          continue;
+        }
+        out.push({ type: 'paragraph', text: line });
+      }
+      setBlocks(out);
+    }, [content]);
+    function renderInline(t: string) {
+      const parts: Array<any> = [];
+      let rest = t;
+      const linkRegex = /(https?:\/\/[^\s)]+)/g;
+      let lastIndex = 0;
+      const matches = Array.from(rest.matchAll(linkRegex));
+      if (matches.length === 0) return t;
+      matches.forEach((m, idx) => {
+        const start = m.index || 0;
+        const end = start + m[0].length;
+        if (start > lastIndex) parts.push(rest.slice(lastIndex, start));
+        parts.push(<a key={`lnk-${idx}`} href={m[0]} className="text-primary-400 underline break-words">{m[0]}</a>);
+        lastIndex = end;
+      });
+      if (lastIndex < rest.length) parts.push(rest.slice(lastIndex));
+      return parts;
+    }
+    let listOpen = false;
+    const nodes: Array<any> = [];
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i];
+      if (b.type === 'list-item') {
+        if (!listOpen) {
+          listOpen = true;
+          nodes.push(<ul key={`ul-${i}`} className="list-disc pl-6 space-y-1" />);
+        }
+        const ul = nodes[nodes.length - 1];
+        nodes[nodes.length - 1] = (
+          <ul key={ul.key} className="list-disc pl-6 space-y-1">
+            {(ul as any).props?.children}
+            <li key={`li-${i}`} className="text-stone-200">{renderInline(b.text)}</li>
+          </ul>
+        );
+        continue;
+      } else if (listOpen) {
+        listOpen = false;
+      }
+      if (b.type === 'code') {
+        nodes.push(
+          <pre key={`code-${i}`} className="bg-stone-800 text-stone-200 p-4 rounded-xl overflow-auto border border-white/10">
+            <code>{b.text}</code>
+          </pre>
+        );
+      } else if (b.type === 'heading') {
+        const size = b.level <= 2 ? 'text-2xl' : b.level === 3 ? 'text-xl' : 'text-lg';
+        nodes.push(<div key={`h-${i}`} className={`font-serif ${size} text-stone-100 mt-4 mb-2`}>{renderInline(b.text)}</div>);
+      } else if (b.type === 'paragraph') {
+        nodes.push(<p key={`p-${i}`} className="text-stone-200 leading-relaxed">{renderInline(b.text)}</p>);
+      } else if (b.type === 'break') {
+        nodes.push(<div key={`br-${i}`} className="h-2" />);
+      }
+    }
+    return <div className="space-y-3">{nodes}</div>;
+  }
+  function LinkPreviews({ content }: { content: string }) {
+    const [previews, setPreviews] = useState<Record<string, { title: string; description: string; image: string }>>({});
+    useEffect(() => {
+      const urls = Array.from((content || '').matchAll(/https?:\/\/[^\s)]+/g)).map((m) => m[0]);
+      const uniq = Array.from(new Set(urls)).slice(0, 5);
+      let active = true;
+      (async () => {
+        for (const u of uniq) {
+          try {
+            const r = await fetch(`/api/link-preview?url=${encodeURIComponent(u)}`, { cache: 'no-store' }).then((x) => x.json());
+            if (!active) return;
+            if (r && !r.error) {
+              setPreviews((prev) => ({ ...prev, [u]: { title: r.title || u, description: r.description || '', image: r.image || '' } }));
+            }
+          } catch {}
+        }
+      })();
+      return () => { active = false; };
+    }, [content]);
+    const keys = Object.keys(previews);
+    if (keys.length === 0) return null;
+    return (
+      <div className="mt-6 space-y-3">
+        {keys.map((u) => {
+          const p = previews[u];
+          return (
+            <a key={u} href={u} className="block rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 hover:bg-white/7 transition">
+              {p.image ? <img src={p.image} alt={p.title} className="w-full h-40 object-cover rounded-lg mb-2 border border-white/10" /> : null}
+              <div className="text-lg font-serif">{p.title}</div>
+              {p.description ? <div className="text-stone-300 text-sm">{p.description}</div> : null}
+              <div className="text-stone-500 text-xs mt-1 break-words">{u}</div>
+            </a>
+          );
+        })}
+      </div>
+    );
+  }
   const load = async () => {
     try {
       const d = await getCommunityPost(params.id);
@@ -64,7 +203,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
             </div>
             {post.imageUrl && post.imageUrl.trim() ? (
               <div className="mb-4">
-                <img src={post.imageUrl} alt={post.title} className="w-full max-h-[28rem] object-cover rounded-xl border border-white/10" />
+                <img src={post.imageUrl} alt={post.imageAlt || post.title} className="w-full max-h-[28rem] object-cover rounded-xl border border-white/10" />
+                {post.imageCaption ? <div className="text-stone-400 text-xs mt-1">{post.imageCaption}</div> : null}
               </div>
             ) : (
               <div className="mb-4 w-full h-48 rounded-xl border border-white/10 bg-stone-800/60 flex items-center justify-center text-stone-300">
@@ -72,7 +212,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
               </div>
             )}
             <div className="text-stone-500 text-xs mb-2">{post.imageUrl && post.imageUrl.trim() ? `imageUrl: ${post.imageUrl}` : 'imageUrl: none'}</div>
-            <div className="text-stone-200 leading-relaxed whitespace-pre-wrap">{post.content}</div>
+            <MarkdownContent content={post.content} />
+            <LinkPreviews content={post.content} />
             <div className="mt-4 flex items-center gap-3">
               <button
                 className="btn btn-secondary"

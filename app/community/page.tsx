@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUser } from '@/lib/contexts/UserContext';
 import toast from 'react-hot-toast';
-import { getCommunityTopics, createCommunityTopic, deleteCommunityTopic, uploadCommunityImage } from '@/lib/api-client';
+import { getCommunityTopics, createCommunityTopic, deleteCommunityTopic, uploadCommunityImage, getCommunityFeeds } from '@/lib/api-client';
 
 export default function CommunityPage() {
   const { user } = useUser();
@@ -16,6 +16,7 @@ export default function CommunityPage() {
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [feeds, setFeeds] = useState<{ trending: Array<any>; mostDiscussed: Array<any> } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -27,6 +28,11 @@ export default function CommunityPage() {
       } finally {
         setLoading(false);
       }
+      try {
+        const f = await getCommunityFeeds();
+        setFeeds(f);
+      } catch (e: any) {
+      }
     })();
   }, []);
 
@@ -37,6 +43,46 @@ export default function CommunityPage() {
           <h1 className="text-4xl font-serif">Community</h1>
           <p className="text-stone-300 mt-2">Explore topics and share reflections with others.</p>
         </div>
+        {feeds ? (
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-2xl font-serif mb-4">Trending</h2>
+              <div className="space-y-4">
+                {feeds.trending.length === 0 ? (
+                  <div className="text-stone-300">No trending posts yet.</div>
+                ) : (
+                  feeds.trending.map((p, i) => (
+                    <Link key={String(p._id) + i} href={`/community/post/${String(p._id)}`} className="block rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 hover:bg-white/7 transition">
+                      {p.imageUrl && p.imageUrl.trim() ? (
+                        <img src={p.imageUrl} alt={p.imageAlt || p.title} className="w-full h-36 object-cover rounded-lg mb-2 border border-white/10" />
+                      ) : null}
+                      <div className="text-lg font-serif">{p.title}</div>
+                      <div className="text-stone-400 text-sm">{Array.isArray(p.likes) ? p.likes.length : 0} likes</div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-2xl font-serif mb-4">Most Discussed</h2>
+              <div className="space-y-4">
+                {feeds.mostDiscussed.length === 0 ? (
+                  <div className="text-stone-300">No discussions yet.</div>
+                ) : (
+                  feeds.mostDiscussed.map((p, i) => (
+                    <Link key={String(p._id) + i} href={`/community/post/${String(p._id)}`} className="block rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 hover:bg-white/7 transition">
+                      {p.imageUrl && p.imageUrl.trim() ? (
+                        <img src={p.imageUrl} alt={p.imageAlt || p.title} className="w-full h-36 object-cover rounded-lg mb-2 border border-white/10" />
+                      ) : null}
+                      <div className="text-lg font-serif">{p.title}</div>
+                      <div className="text-stone-400 text-sm">{p.commentCount || 0} comments</div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {user && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 mb-8">
