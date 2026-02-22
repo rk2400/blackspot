@@ -47,6 +47,18 @@ export async function getCurrentUser() {
   return data.user;
 }
 
+export async function updateUserInterests(interests: string[]) {
+  const res = await fetch(`${API_URL}/api/profile/interests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ interests }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update interests');
+  return data.interests as string[];
+}
+
 export type AddressPayload = {
   street?: string;
   city?: string;

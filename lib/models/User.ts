@@ -7,6 +7,7 @@ export interface IUser extends Document {
   verified: boolean;
   locked?: boolean;
   manifestMaxVideos?: number;
+  interests?: string[];
   address?: {
     full?: string;
     street?: string;
@@ -76,6 +77,10 @@ const UserSchema: Schema = new Schema(
       type: Number,
       default: 3,
       min: 1,
+    },
+    interests: {
+      type: [String],
+      default: [],
     },
   },
   {

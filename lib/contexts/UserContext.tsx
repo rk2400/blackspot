@@ -11,6 +11,7 @@ interface User {
   email: string;
   phone: string;
   isAdmin?: boolean;
+  interests?: string[];
   address?: {
     full?: string;
     street?: string;
@@ -84,4 +85,3 @@ export function useUser() {
   }
   return context;
 }
-

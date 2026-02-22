@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import path from 'path';
 import { emailConfig, authConfig, appConfig } from './config';
 import EmailTemplate from './models/EmailTemplate';
 
@@ -45,12 +46,23 @@ class EmailService {
         return true;
       }
 
+      const attachments: Array<{ filename: string; path: string; cid: string }> = [];
+      if (options.html.includes('cid:blackspot-logo')) {
+        const logoFilePath = path.resolve(process.cwd(), 'public', 'images', 'blackspot.jpeg');
+        attachments.push({
+          filename: 'blackspot.jpeg',
+          path: logoFilePath,
+          cid: 'blackspot-logo',
+        });
+      }
+
       await this.transporter.sendMail({
         from: emailConfig.from,
         to: options.to,
         subject: options.subject,
         html: options.html,
         replyTo: options.replyTo,
+        attachments: attachments.length ? attachments : undefined,
       });
 
       return true;
@@ -93,8 +105,7 @@ class EmailService {
   }
  
   private ensureBrand(html: string): string {
-    const iconUrl = `${appConfig.url}/images/blackspot.jpeg`;
-    if (html.includes(iconUrl) || html.includes('/images/blackspot.jpeg')) return this.stripBackgroundStyles(html);
+    const iconSrc = `cid:blackspot-logo`;
     const content = this.stripBackgroundStyles(html);
     return `
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
@@ -103,7 +114,7 @@ class EmailService {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;text-align:center;">
-                  <img src="${iconUrl}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
+                  <img src="${iconSrc}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;border-radius:50%;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
