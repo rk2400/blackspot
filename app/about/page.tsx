@@ -25,13 +25,14 @@ export default function AboutPage() {
             <h2 className="text-3xl font-serif text-stone-900 mb-6">Our Story</h2>
             <div className="prose prose-stone text-lg text-stone-600 leading-relaxed space-y-6">
               <p>
-                The BlackSpot Project began with a simple yet profound realization: mindful rituals can transform our inner and outer worlds.
-                What started as a personal passion for blending essential oils in a small kitchen has grown into a curated collection of 
-                artisanal candles, each designed to evoke specific memories and emotions.
+                The BlackSpot Project began with a simple realization: tiny, mindful practices transform our inner world and daily life.
+                We now design gentle, everyday tools—affirmations, journaling, breath cycles, and short “manifest” video notes—to help you
+                return to presence, express what matters, and carry insight forward.
               </p>
               <p>
-                We believe in the beauty of slow living. In a world that often moves too fast, lighting a candle is a ritual—a moment 
-                to pause, breathe, and reconnect with yourself and your surroundings.
+                Our focus is practical spirituality: repeatable habits that fit modern schedules. Whether you read a few lines of
+                affirmations, write a single reflection, record a message to your future self, or align plans with lunar rhythms—each
+                practice strengthens awareness, compassion, and integration.
               </p>
             </div>
           </div>

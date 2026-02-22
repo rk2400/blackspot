@@ -59,6 +59,123 @@ export async function updateUserInterests(interests: string[]) {
   return data.interests as string[];
 }
 
+export async function getCommunityTopics() {
+  const res = await fetch(`${API_URL}/api/community/topics`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch topics');
+  return data.topics as Array<{ title: string; slug: string; description?: string; imageUrl?: string; createdAt?: string; createdBy?: { _id: string; name?: string; email?: string } }>;
+}
+
+export async function createCommunityTopic(title: string, description: string, imageUrl?: string) {
+  const res = await fetch(`${API_URL}/api/community/topics`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ title, description, imageUrl }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to create topic');
+  return data.topic as { title: string; slug: string };
+}
+
+export async function getCommunityPosts(slug: string) {
+  const res = await fetch(`${API_URL}/api/community/topics/${slug}/posts`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch posts');
+  return data as { topic: { title: string; slug: string; imageUrl?: string }; posts: Array<{ _id: string; title: string; content: string; imageUrl?: string; author: { _id: string; name?: string; email?: string }; likes: any[]; createdAt: string }> };
+}
+
+export async function createCommunityPost(slug: string, title: string, content: string, imageUrl?: string) {
+  const res = await fetch(`${API_URL}/api/community/topics/${slug}/posts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ title, content, imageUrl }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to create post');
+  return data.post as any;
+}
+
+export async function getCommunityPost(id: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${id}`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch post');
+  return data as { post: { _id: string; title: string; content: string; imageUrl?: string; author: { _id: string; name?: string; email?: string } }; likeCount: number; topic: { title: string; slug: string } | null };
+}
+
+export async function getCommunityComments(id: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${id}/comments`, { cache: 'no-store', credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch comments');
+  return data.comments as Array<{ _id: string; content: string; author: { _id: string; name?: string; email?: string }; createdAt: string }>;
+}
+
+export async function addCommunityComment(id: string, content: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${id}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ content }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to add comment');
+  return data.comment as any;
+}
+
+export async function toggleCommunityLike(id: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${id}/like`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to toggle like');
+  return data as { liked: boolean; likeCount: number };
+}
+
+export async function uploadCommunityImage(file: File) {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(`${API_URL}/api/community/image/upload`, {
+    method: 'POST',
+    credentials: 'include',
+    body: form,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to upload image');
+  return data as { url: string; id: string };
+}
+
+export async function deleteCommunityTopic(slug: string) {
+  const res = await fetch(`${API_URL}/api/community/topics/${slug}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete topic');
+  return data as { ok: true };
+}
+
+export async function deleteCommunityPost(id: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete post');
+  return data as { ok: true };
+}
+
+export async function deleteCommunityComment(postId: string, commentId: string) {
+  const res = await fetch(`${API_URL}/api/community/posts/${postId}/comments/${commentId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete comment');
+  return data as { ok: true };
+}
+
 export type AddressPayload = {
   street?: string;
   city?: string;

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useUser } from '@/lib/contexts/UserContext';
 import toast from 'react-hot-toast';
+import { getCommunityTopics } from '@/lib/api-client';
 
 function useDailyAffirmation() {
   const affirmations = [
@@ -78,6 +79,7 @@ export default function HomePage() {
   const [affShift, setAffShift] = useState<number>(0);
   const [phase, setPhase] = useState(getMoonPhase(new Date()));
   const [phaseDetails, setPhaseDetails] = useState(getPhaseDetails(new Date()));
+  const [communityTopics, setCommunityTopics] = useState<Array<{ title: string; slug: string; description?: string; imageUrl?: string; createdBy?: { _id: string; name?: string; email?: string } }>>([]);
 
   useEffect(() => {
     const now = new Date();
@@ -197,6 +199,17 @@ export default function HomePage() {
     })();
   }, [user]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await getCommunityTopics();
+        setCommunityTopics(list.slice(0, 3));
+      } catch (e: any) {
+        toast.error(e.message || 'Failed to load community');
+      }
+    })();
+  }, []);
+
   async function submitMood() {
     if (!user) {
       toast.error('Please log in to save mood');
@@ -276,6 +289,52 @@ export default function HomePage() {
           <Link href="/afirmations" className="inline-block mt-8 text-sm text-indigo-300 hover:text-indigo-200">
             Explore Morning & Night →
           </Link>
+        </div>
+      </section>
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop"
+            alt="Community"
+            fill
+            className="object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80" />
+        </div>
+        <div className="relative z-10 px-6 w-full max-w-6xl">
+          <div className="text-stone-300 uppercase tracking-widest text-sm mb-3 text-center">Community</div>
+          <h2 className="text-4xl font-serif text-center mb-2">Join the Conversation</h2>
+          <p className="text-stone-300 text-center mb-8">Explore topics and share reflections with others.</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {communityTopics.length === 0 ? (
+              <div className="col-span-3 text-center text-stone-400">No topics yet. Be the first to start one.</div>
+            ) : (
+              communityTopics.map((t) => {
+                const creator = t.createdBy?.name?.trim() ? t.createdBy?.name : t.createdBy?.email;
+                return (
+                  <Link
+                    key={t.slug}
+                    href={`/community/${t.slug}`}
+                    className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 hover:bg-white/7 transition block"
+                  >
+                    {t.imageUrl && t.imageUrl.trim() ? (
+                      <img src={t.imageUrl} alt={t.title} className="w-full h-28 object-cover rounded-lg mb-3 border border-white/10" />
+                    ) : (
+                      <div className="w-full h-28 rounded-lg mb-3 border border-white/10 bg-stone-800/60 flex items-center justify-center text-stone-300">
+                        Image unavailable
+                      </div>
+                    )}
+                    <div className="text-2xl font-serif mb-1">{t.title}</div>
+                    <div className="text-stone-400 text-sm mb-2">{creator ? `by ${creator}` : ''}</div>
+                    <div className="text-stone-300">{t.description || 'Join the discussion.'}</div>
+                  </Link>
+                );
+              })
+            )}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/community" className="btn btn-primary">Open Community</Link>
+          </div>
         </div>
       </section>
 
