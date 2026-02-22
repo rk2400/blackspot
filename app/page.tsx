@@ -346,7 +346,7 @@ export default function HomePage() {
             </div>
             <audio
               ref={audioRef}
-              src="https://cdn.pixabay.com/download/audio/2023/05/03/audio_36d95efb11.mp3?filename=meditation-ambient-143226.mp3"
+              src="/audio/relax.mp3"
               preload="none"
             />
           </div>

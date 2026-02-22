@@ -12,8 +12,14 @@ export const metadata: Metadata = {
   title: 'The BlackSpot Project',
   description: 'Mental wellness and spirituality — a cosmos-inspired experience.',
   icons: {
-    icon: '/Logos/black_icon.png',
-    apple: '/Logos/black_icon.png',
+    icon: [
+      { url: '/images/blackspot.jpeg', sizes: '16x16', type: 'image/jpeg' },
+      { url: '/images/blackspot.jpeg', sizes: '32x32', type: 'image/jpeg' },
+      { url: '/images/blackspot.jpeg', sizes: '48x48', type: 'image/jpeg' },
+    ],
+    apple: [
+      { url: '/images/blackspot.jpeg', sizes: '180x180', type: 'image/jpeg' },
+    ],
   },
 };
 

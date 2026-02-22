@@ -76,14 +76,6 @@ export default function SignupPage() {
         <div className="absolute inset-0 bg-black/60 flex flex-col justify-between p-12 text-white">
           <Link href="/" className="text-2xl font-serif tracking-wide">The BlackSpot Project</Link>
           <div className="max-w-md">
-            <div className="text-center mb-6">
-              <img
-                src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png"
-                alt="BlackSpot icon"
-                className="mx-auto w-24 h-24 object-contain"
-              />
-              <div className="mt-2 text-sm text-white/80">Greetings from BlackSpot</div>
-            </div>
             <h2 className="text-4xl font-serif mb-4 text-white/80 ">Join Our Community</h2>
             <p className="text-stone-200 text-lg">Create an account to access wellness tools, personalize your journey, and receive updates.</p>
           </div>

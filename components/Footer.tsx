@@ -9,8 +9,15 @@ export default function Footer() {
           
           {/* Brand Section */}
           <div className="space-y-6">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden ring-2 ring-stone-700 shadow-lg">
+              <img
+                src="/images/blackspot.jpeg"
+                alt="BlackSpot logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <Link href="/" className="inline-block">
-              <span className="text-2xl font-serif text-white tracking-wide">The BlackSpot Project</span>
+              <span className="text-2xl md:text-3xl font-serif text-white tracking-wide">The BlackSpot Project</span>
             </Link>
             <p className="text-stone-400 leading-relaxed max-w-xs">
               Cosmos-inspired tools for mental wellness and spirituality.

@@ -48,7 +48,7 @@ export default function Header() {
               <nav className={`hidden md:flex items-center gap-8 ${open ? 'block' : ''}`}>
                 {[
                   { name: 'Manifest', href: '/manifest' },
-                  { name: 'Afirmations', href: '/afirmations' },
+                  { name: 'Affirmations', href: '/afirmations' },
                   { name: 'Journal', href: '/journal' },
                   { name: 'About', href: '/about' },
                   { name: 'Contact', href: '/contact' },

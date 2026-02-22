@@ -7,6 +7,9 @@ import AdminHeader from '@/components/AdminHeader';
 import { getEmailTemplates, updateEmailTemplate } from '@/lib/api-client';
 import toast from 'react-hot-toast';
 
+const ORIGIN = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || '');
+const LOGO_URL = `${ORIGIN}/images/blackspot.jpeg`;
+
 const TEMPLATE_TYPES = [
   { value: 'ACCOUNT_WELCOME', label: 'Account Welcome' },
   { value: 'LOGIN_OTP', label: 'Login OTP' },
@@ -27,7 +30,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
@@ -72,7 +75,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
@@ -102,7 +105,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
@@ -128,7 +131,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
@@ -153,7 +156,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
@@ -180,7 +183,7 @@ const DEFAULT_TEMPLATES: Record<string, { subject: string; body: string }> = {
             <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;">
               <tr>
                 <td style="padding:8px 24px;text-align:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;color:#111;">
-                  <img src="https://png.pngtree.com/png-clipart/20230928/original/pngtree-yoga-logo-icon-design-spiritual-silhouette-pose-vector-png-image_12898165.png" alt="Spiritual icon" width="96" style="display:block;margin:12px auto;">
+                  <img src="${LOGO_URL}" alt="BlackSpot logo" width="96" style="display:block;margin:12px auto;">
                   <div style="margin:6px 0 16px 0;font-size:14px;">Greetings from BlackSpot</div>
                 </td>
               </tr>
